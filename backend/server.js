@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
-const connection = require('./data/connection')
+const tripRouter = require('./routes/tripRouter')
+
+app.use(express.json())
 
 //Server Listening
 app.listen(process.env.PORT, () => {
@@ -8,3 +10,4 @@ app.listen(process.env.PORT, () => {
 
 })
 
+app.use('/api/trip', tripRouter)
