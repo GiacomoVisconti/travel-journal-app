@@ -15,8 +15,10 @@ function index(req, res) {
 //SHOW
 function show(req, res) {
     const { id } = req.params
-    const sql = ' SELECT * FROM boolean_trip_holiday.trips WHERE id = ?'
-    connection.query(sql, [id], (err, result) => {
+    const sql_trip = ' SELECT * FROM boolean_trip_holiday.trips WHERE id = ?'
+    const sql_stop = ' SELECT * FROM boolean_trip_holiday.stops WHERE trip_id = ?'
+    let trip
+    connection.query(sql_trip, [id], (err, result) => {
         //Manage 500 and 400 errors
         if (err) {
             return res.status(500).json({
@@ -26,11 +28,30 @@ function show(req, res) {
         if (!result.length > 0) {
             return res.status(404).json({
                 error: 'true',
-                message: 'Record not found'
+                message: 'record not found'
             })
         }
 
-        res.json(result[0])
+        trip = result[0]
+    })
+
+    connection.query(sql_stop, [id], (err, result) => {
+        //Manage 500 and 400 errors
+        if (err) {
+            return res.status(500).json({
+                error: 'Database query failed'
+            })
+        }
+
+        const trip_stops = {
+            id: trip.id,
+            name: trip.name,
+            date_start: trip.date_start,
+            date_end: trip.date_end,
+            stops: result
+        }
+
+        res.json(trip_stops)
     })
 }
 
