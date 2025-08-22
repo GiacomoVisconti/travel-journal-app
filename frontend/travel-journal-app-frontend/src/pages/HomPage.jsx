@@ -1,4 +1,24 @@
+import { useState, useEffect } from "react"
+import { Link } from "react-router-dom"
+
 export default function HomePage() {
+
+    const [dataTrip, setDataTrip] = useState(null)
+    const urlTrip = import.meta.env.VITE_API_TRIP
+
+    useEffect(() => {
+        fetch('http://127.0.0.1:3000/api/trip')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+
+
+                setDataTrip(data)
+
+            })
+    }, [])
+
+
     return (
         <>
             {/* JUMBOTRON */}
@@ -14,36 +34,23 @@ export default function HomePage() {
             <div className="container py-5" >
                 <h1 className='py-2'>TRIPS</h1>
                 <div className="row g-3">
-                    <div className="col">
-                        <div className="card">
-                            <div className="card-body">
-                                <h4 className="card-title">Title</h4>
-                                <p className="card-text">Text</p>
+                    {dataTrip?.map((element) => {
+
+                        return (
+                            <div key={element.id} className="col">
+                                <Link to={`/trip/${element.id}`} className="card">
+                                    <div className="card-body">
+                                        <p>Viaggio in:</p>
+                                        <h4 className="card-title">{element.name}</h4>
+                                        <p className="card-text"> dal <b>{element.date_start}</b> al <b>{element.date_end}</b></p>
+                                    </div>
+                                </Link>
+
+
                             </div>
-                        </div>
+                        )
+                    })}
 
-
-                    </div>
-                    <div className="col">
-                        <div className="card">
-                            <div className="card-body">
-                                <h4 className="card-title">Title</h4>
-                                <p className="card-text">Text</p>
-                            </div>
-                        </div>
-
-
-                    </div>
-                    <div className="col">
-                        <div className="card">
-                            <div className="card-body">
-                                <h4 className="card-title">Title</h4>
-                                <p className="card-text">Text</p>
-                            </div>
-                        </div>
-
-
-                    </div>
                 </div>
             </div>
 
