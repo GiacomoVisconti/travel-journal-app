@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const tripRouter = require('./routes/tripRouter')
 const stopsRouter = require('./routes/stopsRouter')
+const cors = require('cors')
 
 app.use(express.json())
 
@@ -11,5 +12,8 @@ app.listen(process.env.PORT, () => {
 
 })
 
+app.use(cors())
+
+//Movie Routing
 app.use('/api/trip', tripRouter)
 app.use('/api/stops', stopsRouter)
